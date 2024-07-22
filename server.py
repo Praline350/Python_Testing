@@ -1,6 +1,9 @@
 import json
+import os
+from dotenv import load_dotenv
 from flask import Flask,render_template,request,redirect,flash,url_for
 
+load_dotenv()
 
 def loadClubs():
     with open('clubs.json') as c:
@@ -26,8 +29,18 @@ def index():
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
-    return render_template('welcome.html',club=club,competitions=competitions)
+    email = request.form['email']
+    selected_club = None
+    for club in clubs:
+        if club['email'] == email:
+            selected_club = club 
+            print(selected_club)
+            break
+    if selected_club is None:
+        flash("Email wrong")
+        return redirect(url_for('index'))
+    
+    return render_template('welcome.html', club=selected_club, competitions=competitions)
 
 
 @app.route('/book/<competition>/<club>')
