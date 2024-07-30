@@ -1,12 +1,24 @@
 import pytest 
 import html
 from flask import url_for
-from server import app
+from server import app, find_club_by_email
 
 
 @pytest.fixture
 def client():
     return app.test_client()
+
+def test_find_club_by_email():
+    clubs = [
+        {'email': 'admin@irontemple.com'},
+        {'email': 'contact@gym.com'}
+    ]
+
+    assert find_club_by_email('admin@irontemple.com', clubs) == {'email': 'admin@irontemple.com'}
+    assert find_club_by_email(' ADMIN@irontemple.com ', clubs) == {'email': 'admin@irontemple.com'}
+    assert find_club_by_email('contact@gym.com', clubs) == {'email': 'contact@gym.com'}
+    assert find_club_by_email('unknown@gym.com', clubs) is None
+    assert find_club_by_email('', clubs) is None
 
 
 class TestShowSummary:
