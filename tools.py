@@ -41,11 +41,13 @@ class Utils:
     
     def point_ajustement(self, club, competition, placesRequired):
         if placesRequired > int(club['points']):
-            flash('Not enough points for booking')
+            return 'Not enough points for booking'
         elif placesRequired > int(competition['numberOfPlaces']):
-            flash('Not enough places available in the competition')
+            return'Not enough places available in the competition'
+        elif placesRequired > 12:
+            return 'You can only reserve 12 places per competition'
         else:
             # Deduct points and update the number of places
             competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
             club['points'] = int(club['points']) - placesRequired
-            flash('Great-booking complete!')
+            return 'Great-booking complete!'

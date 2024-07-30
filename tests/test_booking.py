@@ -27,24 +27,21 @@ class TestPointAdjustement:
         
     def test_not_enough_points(self):
         placesRequired = 6
-        with patch('tools.flash') as mock_flash:
-            self.utils.point_ajustement(self.club, self.competition, placesRequired)
-            mock_flash.assert_called_once_with('Not enough points for booking')
+        result = self.utils.point_ajustement(self.club, self.competition, placesRequired)
+        assert result == 'Not enough points for booking'
 
     def test_not_enough_places(self):
         placesRequired = 3
         self.competition['numberOfPlaces'] = 2
-        with patch('tools.flash') as mock_flash:
-            self.utils.point_ajustement(self.club, self.competition, placesRequired)
-            mock_flash.assert_called_once_with('Not enough places available in the competition')
+        result = self.utils.point_ajustement(self.club, self.competition, placesRequired)
+        assert result == 'Not enough places available in the competition'
 
     def test_succes_adjustement(self):
         placesRequired = 3
-        with patch('tools.flash') as mock_flash:
-            self.utils.point_ajustement(self.club, self.competition, placesRequired)
-            mock_flash.assert_called_once_with('Great-booking complete!')
-            assert self.club['points'] == 1
-            assert self.competition['numberOfPlaces'] == 7
+        result = self.utils.point_ajustement(self.club, self.competition, placesRequired)
+        assert result == 'Great-booking complete!'
+        assert self.club['points'] == 1
+        assert self.competition['numberOfPlaces'] == 7
 
 class TestBooking:
     
