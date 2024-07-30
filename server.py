@@ -2,33 +2,19 @@ import json
 import os
 from dotenv import load_dotenv
 from flask import Flask,render_template,request,redirect,flash,url_for
+from tools import DataBase, Utils
 
 load_dotenv()
 
-def loadClubs():
-    with open('clubs.json') as c:
-         listOfClubs = json.load(c)['clubs']
-         return listOfClubs
 
-
-def loadCompetitions():
-    with open('competitions.json') as comps:
-         listOfCompetitions = json.load(comps)['competitions']
-         return listOfCompetitions
-    
-def find_club_by_email(email, clubs):
-    email = email.lower().strip()
-    for club in clubs:
-        if club['email'] == email:
-            return club
-    return None
-
+data_base = DataBase()
+utils = Utils()
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
-competitions = loadCompetitions()
-clubs = loadClubs()
+competitions = data_base.loadCompetitions()
+clubs = data_base.loadClubs()
 
 @app.route('/')
 def index():
@@ -36,8 +22,10 @@ def index():
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
+    competitions = data_base.loadCompetitions()
+    clubs = data_base.loadClubs()
     email = request.form['email']
-    selected_club = find_club_by_email(email, clubs)
+    selected_club = utils.find_club_by_email(email, clubs)
     if selected_club is None:
         flash("Email wrong")
         return redirect(url_for('index'))
@@ -60,8 +48,7 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    flash('Great-booking complete!')
+    utils.point_ajustement(club, competition, placesRequired)
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
