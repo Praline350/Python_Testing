@@ -29,11 +29,12 @@ def index():
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
-    email = request.form['email']
+    email = request.form['email'].lower()
     selected_club = None
     for club in clubs:
         if club['email'] == email:
-            selected_club = club 
+            selected_club = club
+            
             print(selected_club)
             break
     if selected_club is None:
