@@ -15,6 +15,13 @@ def loadCompetitions():
     with open('competitions.json') as comps:
          listOfCompetitions = json.load(comps)['competitions']
          return listOfCompetitions
+    
+def find_club_by_email(email, clubs):
+    email = email.lower().strip()
+    for club in clubs:
+        if club['email'] == email:
+            return club
+    return None
 
 
 app = Flask(__name__)
@@ -27,20 +34,13 @@ clubs = loadClubs()
 def index():
     return render_template('index.html')
 
-@app.route('/showSummary',methods=['POST'])
+@app.route('/showSummary', methods=['POST'])
 def showSummary():
-    email = request.form['email'].lower()
-    selected_club = None
-    for club in clubs:
-        if club['email'] == email:
-            selected_club = club
-            
-            print(selected_club)
-            break
+    email = request.form['email']
+    selected_club = find_club_by_email(email, clubs)
     if selected_club is None:
         flash("Email wrong")
         return redirect(url_for('index'))
-    
     return render_template('welcome.html', club=selected_club, competitions=competitions)
 
 

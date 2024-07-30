@@ -51,4 +51,4 @@ class TestShowSummary:
     def test_authentication_with_space(self):
         email = 'admin@irontemple.com '
         response = self.client.post('/showSummary', data={'email': email})
-        assert response.status_code == 302
+        assert response.status_code == 200
