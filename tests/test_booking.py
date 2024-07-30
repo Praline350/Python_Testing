@@ -44,11 +44,9 @@ class TestPointAdjustement:
         assert self.competition['numberOfPlaces'] == 7
 
 class TestBooking:
-    
-
     def test_purchase_places_success(self, client):
         response = client.post('/purchasePlaces', data={
-            'club': 'Simply Lift',
+            'club': 'She Lifts',
             'competition': 'Spring Festival',
             'places': '5'
         })
@@ -66,10 +64,20 @@ class TestBooking:
 
     def test_purchase_places_not_enough_places(self, client):
         response = client.post('/purchasePlaces', data={
-            'club': 'Simply Lift',
+            'club': 'She Lifts',
             'competition': 'Testing',
             'places': '2'
         })
         assert response.status_code == 200
-        print(response.data)
         assert b'Not enough places available in the competition' in response.data
+
+    def test_purchase_more_than_12_place(self, client):
+        response = client.post('/purchasePlaces', data={
+            'club': 'Simply Lift',
+            'competition': 'Spring Festival',
+            'places': '13'
+        })
+        
+        print(response.data)
+        assert response.status_code == 200
+        assert b'You can only reserve 12 places per competition' in response.data
