@@ -1,5 +1,4 @@
 import json
-from flask import flash
 
 CLUB_PATH = 'clubs.json'
 COMPETITION_PATH = 'competitions.json'
@@ -10,20 +9,34 @@ class DataBase:
         self.competition_db = COMPETITION_PATH
 
 
-    def loadClubs(self):
+    def load_clubs(self):
         with open(self.club_db) as clubs:
             listOfClubs = json.load(clubs)['clubs']
             return listOfClubs
-
-
-    def loadCompetitions(self):
-        with open(self.competition_db) as comps:
+        
+    def load_competitions(self):
+        with open(self.competition_db, 'r') as comps:
             listOfCompetitions = json.load(comps)['competitions']
             return listOfCompetitions
         
-    def write(self, path, data):
-        with open(path, 'w') as file:
-            json.dump(data, file, indent=4)
+    def save_clubs(self, clubs):
+        with open(self.club_db, 'w') as file:
+            json.dump({"clubs": clubs}, file, indent=4)
+
+    def save_competitions(self, competitions):
+        with open(self.competition_db, 'w') as file:
+            json.dump({"competitions": competitions}, file, indent=4)
+
+    def update_club_points(self, club_name, new_points):
+        clubs = self.load_clubs()
+        for club in clubs:
+            if club['name'] == club_name:
+                club['points'] = str(new_points)  # Convertir les points en chaîne de caractères
+                break
+        self.save_clubs(clubs)
+        
+        
+            
 
 
         
@@ -70,3 +83,4 @@ class Utils:
             competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
             club['points'] = int(club['points']) - placesRequired
             return 'Great-booking complete!'
+        
