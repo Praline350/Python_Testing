@@ -1,9 +1,10 @@
 import pytest
 import json
 from unittest.mock import mock_open, patch
-from tools.tools import DataBase  
+from tools.tools import DataBase
 
-CLUBS_JSON = '''{
+
+CLUBS_JSON = {
     "clubs":[
         {
             "name":"Simply Lift",
@@ -21,9 +22,9 @@ CLUBS_JSON = '''{
             "points":"12"
         }
     ]
-}'''
+}
 
-COMPETITIONS_JSON = '''{
+COMPETITIONS_JSON = {
     "competitions": [
         {
             "name": "Spring Festival",
@@ -36,24 +37,30 @@ COMPETITIONS_JSON = '''{
             "numberOfPlaces": "13"
         }
     ]
-}'''
+}
 
-@pytest.fixture
-def db():
-    return DataBase()
+class TestDataBase:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.data_base = DataBase()
+         
 
-def test_loadClubs(db):
-    with patch('builtins.open', mock_open(read_data=CLUBS_JSON)):
-        clubs = db.loadClubs()
+    def test_load_clubs(self):
+        clubs = self.data_base.load_clubs()
         assert len(clubs) == 3
         assert clubs[0]['name'] == "Simply Lift"
         assert clubs[1]['email'] == "admin@irontemple.com"
         assert clubs[2]['points'] == "12"
 
-def test_loadCompetitions(db):
-    with patch('builtins.open', mock_open(read_data=COMPETITIONS_JSON)):
-        competitions = db.loadCompetitions()
-        assert len(competitions) == 2
+    def test_load_competitions(self):
+        competitions = self.data_base.load_competitions()
+        assert len(competitions) == 3
         assert competitions[0]['name'] == "Spring Festival"
         assert competitions[1]['date'] == "2020-10-22 13:30:00"
+
+    def test_update_club_points(self):
+        self.data_base.update_club_points("Simply Lift", 13)
+        clubs = self.data_base.load_clubs()
+        assert clubs[0]['name'] == "Simply Lift"
+        assert clubs[0]['points'] == "13"
 
