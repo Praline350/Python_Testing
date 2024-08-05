@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Points Board</title>
+</head>
+<body>
+    <h1>Clubs Information</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for club in clubs %}
+            <tr>
+                <td>{{ club.name }}</td>
+                <td>{{ club.email }}</td>
+                <td>{{ club.points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h1>Competitions Information</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Number of Places</th>
+                <th>Clubs Registered</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for competition in competitions %}
+            <tr>
+                <td>{{ competition.name }}</td>
+                <td>{{ competition.date }}</td>
+                <td>{{ competition.numberOfPlaces }}</td>
+                <td>
+                    {% if competition.clubsRegistered %}
+                        <ul>
+                            {% for club in competition.clubsRegistered %}
+                                {% for club_name, points_registered in club.items() %}
+                                    <li>Name: {{ club_name }} // Points Registered: {{ points_registered }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        No clubs registered
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
