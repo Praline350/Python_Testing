@@ -2,7 +2,8 @@ import json
 import os
 from dotenv import load_dotenv
 from flask import Flask,render_template,request,redirect,flash,url_for
-from tools.tools import DataBase, Utils
+from tools.tools import Utils, DataBase
+
 
 load_dotenv()
 
@@ -13,8 +14,8 @@ utils = Utils()
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
-competitions = data_base.loadCompetitions()
-clubs = data_base.loadClubs()
+competitions = data_base.load_competitions()
+clubs = data_base.load_clubs()
 
 @app.route('/')
 def index():
@@ -55,8 +56,10 @@ def purchasePlaces():
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
-# TODO: Add route for points display
 
+@app.route('/PointsBoard', methods=['GET'])
+def pointsBoard():
+    return render_template('board.html', clubs=clubs, competitions=competitions)
 
 @app.route('/logout')
 def logout():
