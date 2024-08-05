@@ -2,7 +2,7 @@ import json
 import os
 from dotenv import load_dotenv
 from flask import Flask,render_template,request,redirect,flash,url_for
-from tools import DataBase, Utils
+from tools.tools import DataBase, Utils
 
 load_dotenv()
 
@@ -22,8 +22,6 @@ def index():
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
-    competitions = data_base.loadCompetitions()
-    clubs = data_base.loadClubs()
     email = request.form['email']
     selected_club = utils.find_club_by_email(email, clubs)
     if selected_club is None:
@@ -48,8 +46,12 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-    message = utils.point_ajustement(club, competition, placesRequired)
-    flash(message)
+    validation = utils.club_add_places(club, competition, placesRequired)
+    if not validation:
+        flash("You cannot reserved more than 12 place per competition")
+    else:
+        message = utils.point_ajustement(club, competition, placesRequired)
+        flash(message)
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
