@@ -1,7 +1,7 @@
 import pytest
 import json
 from unittest.mock import mock_open, patch
-from tools import DataBase  # Remplacez 'your_module' par le nom de votre module
+from tools.tools import DataBase  
 
 CLUBS_JSON = '''{
     "clubs":[

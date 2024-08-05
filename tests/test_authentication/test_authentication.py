@@ -2,7 +2,7 @@ import pytest
 import html
 from flask import url_for
 from server import app
-from tools import Utils
+from tools.tools import Utils
 
 
 utils = Utils()
