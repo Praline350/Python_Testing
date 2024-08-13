@@ -63,4 +63,3 @@ class TestDataBase:
         clubs = self.data_base.load_clubs()
         assert clubs[0]['name'] == "Simply Lift"
         assert clubs[0]['points'] == "13"
-

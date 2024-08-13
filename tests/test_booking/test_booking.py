@@ -2,13 +2,14 @@ import pytest
 from unittest.mock import patch
 import html
 from flask import url_for
-from server import app
+from server import Server
 from tools.tools import Utils
 
 
 @pytest.fixture
 def client():
-    return app.test_client()
+    server = Server()
+    return server.app.test_client()
 
 
 class TestBooking:
@@ -28,7 +29,7 @@ class TestBooking:
             'places': '10'
         })
         assert response.status_code == 200
-        assert b'Not enough points for booking' in response.data
+        assert b'Exceeding the authorized limit or club points' in response.data
 
     def test_purchase_places_not_enough_places(self, client):
         response = client.post('/purchasePlaces', data={

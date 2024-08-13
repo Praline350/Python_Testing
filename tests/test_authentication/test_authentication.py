@@ -1,7 +1,7 @@
 import pytest 
 import html
 from flask import url_for
-from server import app
+from server import Server
 from tools.tools import Utils
 
 
@@ -9,9 +9,8 @@ utils = Utils()
 
 @pytest.fixture
 def client():
-    return app.test_client()
-
-
+    server = Server()
+    return server.app.test_client()
 
 
 class TestShowSummary:

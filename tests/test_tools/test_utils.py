@@ -56,13 +56,19 @@ class TestUtils:
     def setup(self):
         self.utils = Utils()
         self.club = {
-        "name":"Simply Lift",
-        "email":"john@simplylift.co",
-        "points":"13"
+            "name":"Simply Lift",
+            "email":"john@simplylift.co",
+            "points":"13"
         }
-        self.club2 = {   "name":"She Lifts",
-        "email": "kate@shelifts.co.uk",
-        "points":"12"
+        self.club2 = {   
+            "name":"She Lifts",
+            "email": "kate@shelifts.co.uk",
+            "points":"12"
+        }
+        self.club3 = {
+            "name": "Iron Temple",
+            "email": "admin@irontemple.com",
+            "points": "4"
         }
         self.competition = {
             "name": "Spring Festival",
@@ -97,6 +103,11 @@ class TestUtils:
         self.utils.club_add_places(self.club, self.competition, 12)
         assert self.competition['clubsRegistered'] == [{self.club['name']: 12}]
         
-
+    def test_add_places_exceeding_points(self):
+        # Demande plus de places que le club n'a de points (14 > 13)
+        validate = self.utils.club_add_places(self.club3, self.competition, 5)
+        assert validate == False
+        # Vérifie que le club n'est pas ajouté à clubsRegistered
+        assert len(self.competition['clubsRegistered']) == 0
 
 
