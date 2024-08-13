@@ -33,6 +33,7 @@
                 <th>Name</th>
                 <th>Date</th>
                 <th>Number of Places</th>
+                <th>Status</th>
                 <th>Clubs Registered</th>
             </tr>
         </thead>
@@ -42,6 +43,7 @@
                 <td>{{ competition.name }}</td>
                 <td>{{ competition.date }}</td>
                 <td>{{ competition.numberOfPlaces }}</td>
+                <td>{{competition.status}}</td>
                 <td>
                     {% if competition.clubsRegistered %}
                         <ul>
