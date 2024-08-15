@@ -40,7 +40,7 @@ class DataBase:
         current_time = datetime.now()
         for competition in competitions:
             competition_time = datetime.strptime(competition['date'], "%Y-%m-%d %H:%M:%S")
-            competition['status'] = 'Past' if competition_time < current_time else 'Upcoming'
+            competition['status'] = False if competition_time < current_time else True
         self.save_competitions(competitions)
         
             
@@ -62,24 +62,24 @@ class Utils:
 
         for c in club_registered:
             if club['name'] in c:
-                print(f"Club trouvé dans la compétition: {club['name']}, Places demandées: {placesRequired}, Places actuelles: {c[club['name']]}, Points disponibles: {club['points']}")
+                # print(f"Club trouvé dans la compétition: {club['name']}, Places demandées: {placesRequired}, Places actuelles: {c[club['name']]}, Points disponibles: {club['points']}")
                 if c[club['name']] + placesRequired > max_places_allowed or placesRequired > int(club['points']):
-                    print("Condition non remplie : dépassement de la limite autorisée ou des points du club")
+                    # print("Condition non remplie : dépassement de la limite autorisée ou des points du club")
                     return False
                 else:
                     c[club['name']] += placesRequired
                     club_found = True
-                    print(f"Places mises à jour pour le club : {c[club['name']]}")
+                    # print(f"Places mises à jour pour le club : {c[club['name']]}")
                     return True
 
         if not club_found:
-            print(f"Club non trouvé dans la compétition, ajout des places. Places demandées: {placesRequired}, Points disponibles: {club['points']}")
+            # print(f"Club non trouvé dans la compétition, ajout des places. Places demandées: {placesRequired}, Points disponibles: {club['points']}")
             if placesRequired <= max_places_allowed and placesRequired <= int(club['points']):
                 club_registered.append({club['name']: placesRequired})
-                print(f"Club ajouté avec {placesRequired} places")
+                # print(f"Club ajouté avec {placesRequired} places")
                 return True 
             else:
-                print("Condition non remplie : dépassement de la limite autorisée ou des points du club")
+                # print("Condition non remplie : dépassement de la limite autorisée ou des points du club")
                 return False
 
     def point_ajustement(self, club, competition, placesRequired):

@@ -24,6 +24,7 @@ class Server:
         self.app.add_url_rule('/PointsBoard', 'pointsBoard', self.pointsBoard, methods=['GET'])
         self.app.add_url_rule('/logout', 'logout', self.logout)
 
+
     def index(self):
         return render_template('index.html')
 
@@ -35,14 +36,22 @@ class Server:
             return redirect(url_for('index'))
         return render_template('welcome.html', club=selected_club, competitions=self.competitions)
 
+
+
     def book(self, competition, club):
-        foundClub = [c for c in self.clubs if c['name'] == club][0]
-        foundCompetition = [c for c in self.competitions if c['name'] == competition][0]
-        if foundClub and foundCompetition:
-            return render_template('booking.html', club=foundClub, competition=foundCompetition)
-        else:
-            flash("Something went wrong-please try again")
-            return render_template('welcome.html', club=club, competitions=self.competitions)
+        foundClub = [c for c in self.clubs if c['name'] == club]
+        foundCompetition = [c for c in self.competitions if c['name'] == competition]
+
+        if not foundClub:
+            flash(f"Club '{club}' not found. Please select a valid club.")
+            return redirect(url_for('index'))  # Redirige vers une page appropriée
+
+        if not foundCompetition:
+            flash(f"Competition '{competition}' not found. Please select a valid competition.")
+            return redirect(url_for('index'))  # Redirige vers une page appropriée
+
+        return render_template('booking.html', club=foundClub[0], competition=foundCompetition[0])
+
 
     def purchasePlaces(self):
         competition = [c for c in self.competitions if c['name'] == request.form['competition']][0]
@@ -65,7 +74,8 @@ class Server:
     def run(self, host='0.0.0.0', port=5000, debug=True):
         self.app.run(host=host, port=port, debug=debug)
 
-# Exécution du serveur
+
+
 if __name__ == '__main__':
     server = Server()
     server.run()
