@@ -36,11 +36,10 @@ class Server:
             return redirect(url_for('index'))
         return render_template('welcome.html', club=selected_club, competitions=self.competitions)
 
-
-
     def book(self, competition, club):
         foundClub = [c for c in self.clubs if c['name'] == club]
         foundCompetition = [c for c in self.competitions if c['name'] == competition]
+        
 
         if not foundClub:
             flash(f"Club '{club}' not found. Please select a valid club.")
@@ -49,9 +48,11 @@ class Server:
         if not foundCompetition:
             flash(f"Competition '{competition}' not found. Please select a valid competition.")
             return redirect(url_for('index'))  # Redirige vers une page appropriée
+        
+        # Calcul du nombre maximum de places qu'un club peux reserver pour validation Front
+        max_places = min(12, int(foundClub[0]['points']), int(foundCompetition[0]['numberOfPlaces']))
 
-        return render_template('booking.html', club=foundClub[0], competition=foundCompetition[0])
-
+        return render_template('booking.html', club=foundClub[0], competition=foundCompetition[0], max_places=max_places)
 
     def purchasePlaces(self):
         competition = [c for c in self.competitions if c['name'] == request.form['competition']][0]
