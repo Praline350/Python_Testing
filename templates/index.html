@@ -13,6 +13,9 @@
         <input type="email" name="email" id=""/>
         <button type="submit">Enter</button>
     </form>
+
+    <h2>For see a Point board of all competitions</h2>
+    <strong>->        </strong><a href="{{url_for('pointsBoard')}}">Points Board</a><br />
     <div class="error-message">
         {% with messages = get_flashed_messages()%}
             {% if messages %}
